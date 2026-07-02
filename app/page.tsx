@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react'
 import Nav from '@/components/Nav'
 
 // ── Replace these placeholders before launch ──────────────────────────────
-const BOOKING_LINK    = '{{BOOKING_LINK}}'           // e.g. Google appointment link
-const LINKEDIN_URL    = 'https://linkedin.com/in/stephenkomando'
+const BOOKING_LINK    = 'https://calendar.app.google/zy6ti1xLbVxLeiPv6'
+const LINKEDIN_URL    = 'https://www.linkedin.com/in/domingos-komando/'
 const CV_PDF          = '/Stephen_Komando_CV.pdf'
 const CASE_STUDY_PDF  = '/fauesp-case-study.pdf'
 const FAUESP_IMG      = '/fauesp-screenshot.jpg'     // drop into /public/

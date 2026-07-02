@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-const BOOKING_LINK = '{{BOOKING_LINK}}'
+const BOOKING_LINK = 'https://calendar.app.google/zy6ti1xLbVxLeiPv6'
 
 export default function Nav() {
   const [open, setOpen] = useState(false)
