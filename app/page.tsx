@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Nav from '@/components/Nav'
 
 // ── Replace these placeholders before launch ──────────────────────────────
@@ -140,43 +140,91 @@ const FAUESP_IMAGES = Array.from({ length: 10 }, (_, i) => `/fauesp/${String(i +
 
 function FauesCarousel() {
   const [idx, setIdx] = useState(0)
+  const [lightbox, setLightbox] = useState(false)
   const total = FAUESP_IMAGES.length
-  const prev = () => setIdx((i) => (i - 1 + total) % total)
-  const next = () => setIdx((i) => (i + 1) % total)
+  const prev = (e?: React.MouseEvent) => { e?.stopPropagation(); setIdx((i) => (i - 1 + total) % total) }
+  const next = (e?: React.MouseEvent) => { e?.stopPropagation(); setIdx((i) => (i + 1) % total) }
+
+  // Close lightbox on Escape key
+  useEffect(() => {
+    if (!lightbox) return
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightbox(false) }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [lightbox])
 
   return (
-    <div className="carousel">
-      <div className="carousel-track">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          key={idx}
-          src={FAUESP_IMAGES[idx]}
-          alt={`FAUESP campaign result ${idx + 1} of ${total}`}
-          className="carousel-img"
-        />
-        <button className="carousel-btn carousel-btn--prev" onClick={prev} aria-label="Previous image">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </button>
-        <button className="carousel-btn carousel-btn--next" onClick={next} aria-label="Next image">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <path d="M9 18l6-6-6-6" />
-          </svg>
-        </button>
-      </div>
-      <div className="carousel-dots">
-        {FAUESP_IMAGES.map((_, i) => (
-          <button
-            key={i}
-            className={`carousel-dot${i === idx ? ' carousel-dot--active' : ''}`}
-            onClick={() => setIdx(i)}
-            aria-label={`Go to image ${i + 1}`}
+    <>
+      <div className="carousel">
+        <div className="carousel-track">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            key={idx}
+            src={FAUESP_IMAGES[idx]}
+            alt={`FAUESP campaign result ${idx + 1} of ${total}`}
+            className="carousel-img"
+            onClick={() => setLightbox(true)}
+            title="Click to view full size"
           />
-        ))}
+          <button className="carousel-btn carousel-btn--prev" onClick={prev} aria-label="Previous image">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <button className="carousel-btn carousel-btn--next" onClick={next} aria-label="Next image">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+          <div className="carousel-expand-hint">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+            </svg>
+            Click to expand
+          </div>
+        </div>
+        <div className="carousel-dots">
+          {FAUESP_IMAGES.map((_, i) => (
+            <button
+              key={i}
+              className={`carousel-dot${i === idx ? ' carousel-dot--active' : ''}`}
+              onClick={() => setIdx(i)}
+              aria-label={`Go to image ${i + 1}`}
+            />
+          ))}
+        </div>
+        <p className="carousel-counter">{idx + 1} / {total}</p>
       </div>
-      <p className="carousel-counter">{idx + 1} / {total}</p>
-    </div>
+
+      {/* Lightbox */}
+      {lightbox && (
+        <div className="lightbox" onClick={() => setLightbox(false)} role="dialog" aria-modal="true" aria-label="Full size image">
+          <button className="lightbox-close" onClick={() => setLightbox(false)} aria-label="Close">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+          <button className="lightbox-nav lightbox-nav--prev" onClick={prev} aria-label="Previous image">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={FAUESP_IMAGES[idx]}
+            alt={`FAUESP campaign result ${idx + 1} of ${total}`}
+            className="lightbox-img"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button className="lightbox-nav lightbox-nav--next" onClick={next} aria-label="Next image">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+          <p className="lightbox-counter">{idx + 1} / {total}</p>
+        </div>
+      )}
+    </>
   )
 }
 
