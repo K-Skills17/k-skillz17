@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Nav from '@/components/Nav'
 
 // ── Replace these placeholders before launch ──────────────────────────────
@@ -134,6 +135,51 @@ function About() {
   )
 }
 
+/* ─── FAUESP image carousel ─────────────────────────────────────────────── */
+const FAUESP_IMAGES = Array.from({ length: 10 }, (_, i) => `/fauesp/${String(i + 1).padStart(2, '0')}.jpg`)
+
+function FauesCarousel() {
+  const [idx, setIdx] = useState(0)
+  const total = FAUESP_IMAGES.length
+  const prev = () => setIdx((i) => (i - 1 + total) % total)
+  const next = () => setIdx((i) => (i + 1) % total)
+
+  return (
+    <div className="carousel">
+      <div className="carousel-track">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          key={idx}
+          src={FAUESP_IMAGES[idx]}
+          alt={`FAUESP campaign result ${idx + 1} of ${total}`}
+          className="carousel-img"
+        />
+        <button className="carousel-btn carousel-btn--prev" onClick={prev} aria-label="Previous image">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <button className="carousel-btn carousel-btn--next" onClick={next} aria-label="Next image">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
+      </div>
+      <div className="carousel-dots">
+        {FAUESP_IMAGES.map((_, i) => (
+          <button
+            key={i}
+            className={`carousel-dot${i === idx ? ' carousel-dot--active' : ''}`}
+            onClick={() => setIdx(i)}
+            aria-label={`Go to image ${i + 1}`}
+          />
+        ))}
+      </div>
+      <p className="carousel-counter">{idx + 1} / {total}</p>
+    </div>
+  )
+}
+
 /* ─── Selected Work ──────────────────────────────────────────────────────── */
 function SelectedWork() {
   return (
@@ -164,27 +210,7 @@ function SelectedWork() {
               </a>
             </div>
 
-            <div className="screenshot-wrap">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={FAUESP_IMG}
-                alt="FAUESP campaign results — sub-R$1 cost per lead"
-                className="screenshot-img"
-                onError={(e) => {
-                  ;(e.currentTarget as HTMLImageElement).style.display = 'none'
-                  const ph = document.getElementById('fauesp-img-ph')
-                  if (ph) ph.style.display = 'flex'
-                }}
-              />
-              <div id="fauesp-img-ph" className="screenshot-placeholder" style={{ display: 'none' }}>
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                  <path d="M3 9h18M9 21V9" />
-                </svg>
-                <span>Campaign screenshot</span>
-                <span className="screenshot-placeholder-sub">Add fauesp-screenshot.jpg to /public/</span>
-              </div>
-            </div>
+            <FauesCarousel />
           </div>
         </div>
 
