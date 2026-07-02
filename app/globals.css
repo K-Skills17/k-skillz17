@@ -265,18 +265,19 @@ button {
 }
 
 .hero-photo {
-  width: clamp(140px, 32vw, 200px);
-  height: clamp(140px, 32vw, 200px);
-  border-radius: 50%;
+  width: clamp(200px, 38vw, 300px);
+  height: clamp(240px, 46vw, 360px);
+  border-radius: 14px;
   object-fit: cover;
+  object-position: center top;
   border: 3px solid var(--border);
   box-shadow: 0 4px 24px rgba(18, 35, 58, 0.10);
 }
 
 .hero-photo-placeholder {
-  width: clamp(140px, 32vw, 200px);
-  height: clamp(140px, 32vw, 200px);
-  border-radius: 50%;
+  width: clamp(200px, 38vw, 300px);
+  height: clamp(240px, 46vw, 360px);
+  border-radius: 14px;
   background: var(--bg-alt);
   border: 3px dashed var(--border);
   display: flex;
